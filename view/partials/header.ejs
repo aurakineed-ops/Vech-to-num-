@@ -1,0 +1,25 @@
+<header class="topbar">
+  <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <h5 class="topbar-title mb-0"><%= title %></h5>
+
+  <div class="topbar-actions">
+    <span class="badge text-bg-success live-dot"><i class="bi bi-circle-fill"></i> Live</span>
+    <button class="btn btn-sm btn-outline-secondary" id="themeToggle" title="Toggle theme">
+      <i class="bi bi-moon-stars-fill"></i>
+    </button>
+    <div class="dropdown">
+      <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle"></i>
+        <%= (typeof currentAdmin !== 'undefined' && currentAdmin) ? currentAdmin.username : 'Admin' %>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="/settings"><i class="bi bi-gear me-2"></i>Settings</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</header>

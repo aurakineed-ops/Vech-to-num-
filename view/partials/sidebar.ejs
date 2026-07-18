@@ -1,0 +1,30 @@
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <i class="bi bi-car-front-fill"></i>
+    <span>Vehicle Info Admin</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="/dashboard" class="nav-link <%= active === 'dashboard' ? 'active' : '' %>">
+      <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+    <a href="/apikeys" class="nav-link <%= active === 'apikeys' ? 'active' : '' %>">
+      <i class="bi bi-key-fill"></i> API Keys
+    </a>
+    <a href="/logs" class="nav-link <%= active === 'logs' ? 'active' : '' %>">
+      <i class="bi bi-list-columns-reverse"></i> Request Logs
+    </a>
+    <a href="/analytics" class="nav-link <%= active === 'analytics' ? 'active' : '' %>">
+      <i class="bi bi-graph-up-arrow"></i> Analytics
+    </a>
+    <a href="/settings" class="nav-link <%= active === 'settings' ? 'active' : '' %>">
+      <i class="bi bi-gear-fill"></i> Settings
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="/logout" class="nav-link text-danger">
+      <i class="bi bi-box-arrow-right"></i> Logout
+    </a>
+  </div>
+</aside>
