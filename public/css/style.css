@@ -1,0 +1,151 @@
+/* ==========================================================================
+   Vehicle Info Admin Panel — Core Styles
+   ========================================================================== */
+:root {
+  --sidebar-width: 250px;
+  --brand: #4f46e5;
+  --bg-body: #f4f6fb;
+  --bg-panel: #ffffff;
+  --text-main: #1f2430;
+  --border-color: #e7e9f0;
+}
+
+[data-bs-theme="dark"] {
+  --bg-body: #10131c;
+  --bg-panel: #171b26;
+  --text-main: #e9ebf3;
+  --border-color: #262c3d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg-body);
+  color: var(--text-main);
+  font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+  transition: background .2s ease, color .2s ease;
+}
+
+.app-wrapper { display: flex; min-height: 100vh; }
+
+/* ---------------- Sidebar ---------------- */
+.sidebar {
+  width: var(--sidebar-width);
+  background: linear-gradient(180deg, #1e1b4b, #312e81);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  z-index: 1030;
+  transition: transform .25s ease;
+}
+.sidebar-brand {
+  display: flex; align-items: center; gap: .6rem;
+  padding: 1.25rem 1.25rem;
+  font-weight: 700; font-size: 1.05rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.sidebar-brand i { font-size: 1.4rem; color: #a5b4fc; }
+.sidebar-nav { flex: 1; padding: 1rem .75rem; overflow-y: auto; }
+.sidebar-nav .nav-link {
+  color: #c7d2fe; padding: .65rem .9rem; border-radius: .5rem;
+  display: flex; align-items: center; gap: .65rem; font-size: .92rem;
+  margin-bottom: .2rem; transition: background .15s ease, color .15s ease;
+}
+.sidebar-nav .nav-link i { width: 18px; text-align: center; }
+.sidebar-nav .nav-link:hover { background: rgba(255,255,255,.08); color: #fff; }
+.sidebar-nav .nav-link.active { background: var(--brand); color: #fff; }
+.sidebar-footer { padding: 1rem .9rem; border-top: 1px solid rgba(255,255,255,.1); }
+.sidebar-footer .nav-link { color: #fca5a5; padding: .5rem .5rem; }
+
+/* ---------------- Main content ---------------- */
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex; flex-direction: column;
+  min-width: 0;
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .85rem 1.5rem;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky; top: 0; z-index: 1020;
+}
+.topbar-title { font-weight: 600; }
+.topbar-actions { display: flex; align-items: center; gap: .6rem; }
+.live-dot i { font-size: .5rem; margin-right: .25rem; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.page-body { padding: 1.5rem; flex: 1; }
+.page-footer {
+  padding: .85rem 1.5rem; text-align: center; font-size: .8rem;
+  color: #8b90a0; border-top: 1px solid var(--border-color);
+}
+
+/* ---------------- Stat Cards ---------------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.stat-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: .85rem;
+  padding: 1.1rem;
+  display: flex; align-items: center; gap: .9rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.stat-icon {
+  width: 46px; height: 46px; border-radius: .7rem;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.2rem; flex-shrink: 0;
+}
+.bg-purple { background: #7c3aed; }
+.bg-teal { background: #0d9488; }
+.stat-value { font-size: 1.4rem; font-weight: 700; line-height: 1.1; }
+.stat-label { font-size: .78rem; color: #8b90a0; margin-top: 2px; }
+
+/* ---------------- Panels ---------------- */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: .85rem;
+  padding: 1.1rem;
+  margin-bottom: 1rem;
+}
+.panel-title { font-weight: 600; margin-bottom: .9rem; font-size: .95rem; }
+
+.key-code { font-size: .78rem; word-break: break-all; }
+
+/* ---------------- Login page ---------------- */
+.login-body {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #1e1b4b, #4f46e5);
+}
+.login-card {
+  background: #fff; border-radius: 1rem; padding: 2.25rem;
+  width: 100%; max-width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,.25);
+}
+.login-brand { text-align: center; margin-bottom: 1.5rem; }
+.login-brand i { font-size: 2.2rem; color: var(--brand); }
+
+/* ---------------- Toasts ---------------- */
+.toast-msg {
+  position: fixed; top: 1rem; right: 1rem; z-index: 2000;
+  padding: .7rem 1.1rem; border-radius: .55rem; color: #fff;
+  font-size: .88rem; box-shadow: 0 6px 20px rgba(0,0,0,.15);
+  animation: slideIn .25s ease;
+}
+.toast-success { background: #16a34a; }
+.toast-error { background: #dc2626; }
+@keyframes slideIn { from { transform: translateX(30px); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.show { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+}
