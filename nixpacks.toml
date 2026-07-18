@@ -1,0 +1,19 @@
+[variables]
+NODE_ENV = "production"
+
+[phases.setup]
+nixPkgs = [
+  "nodejs_20",
+  "python3",
+  "gcc",
+  "gnumake",
+  "sqlite"
+]
+
+[phases.install]
+cmds = [
+  "npm install"
+]
+
+[start]
+cmd = "node server.js"
