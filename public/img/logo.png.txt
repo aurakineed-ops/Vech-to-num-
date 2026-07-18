@@ -1,0 +1,2 @@
+Placeholder: replace public/img/logo.png with your actual logo, or point
+the "https://i.ibb.co/rfZML1rb/x.jpg" field in Settings to a hosted image.
