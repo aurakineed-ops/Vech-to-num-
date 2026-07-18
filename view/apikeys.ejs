@@ -1,0 +1,160 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">API Key Management</h5>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createKeyModal">
+    <i class="bi bi-plus-lg"></i> Generate New Key
+  </button>
+</div>
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle" id="keysTable">
+      <thead>
+        <tr>
+          <th>Owner</th>
+          <th>API Key</th>
+          <th>Status</th>
+          <th>Requests</th>
+          <th>Today</th>
+          <th>Daily Limit</th>
+          <th>Total Limit</th>
+          <th>Created</th>
+          <th>Expiry</th>
+          <th>Last Used</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% keys.forEach(function(k){
+             const isExpired = new Date(k.expiry_date) < new Date();
+             const statusLabel = isExpired ? 'Expired' : (k.status === 'enabled' ? 'Enabled' : 'Disabled');
+             const statusClass = isExpired ? 'bg-warning text-dark' : (k.status === 'enabled' ? 'bg-success' : 'bg-secondary');
+        %>
+        <tr>
+          <td><%= k.owner_name %></td>
+          <td><code class="key-code"><%= k.key %></code>
+            <button class="btn btn-sm btn-link p-0 copy-btn" data-copy="<%= k.key %>" title="Copy"><i class="bi bi-clipboard"></i></button>
+          </td>
+          <td><span class="badge <%= statusClass %>"><%= statusLabel %></span></td>
+          <td><%= k.request_count %></td>
+          <td><%= k.today_requests %></td>
+          <td><%= k.daily_limit %></td>
+          <td><%= k.total_limit %></td>
+          <td class="small text-muted"><%= new Date(k.created_at).toLocaleString() %></td>
+          <td class="small text-muted"><%= new Date(k.expiry_date).toLocaleDateString() %> (<%= k.expiry_days %>d)</td>
+          <td class="small text-muted"><%= k.last_used ? new Date(k.last_used).toLocaleString() : 'Never' %></td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal<%= k.id %>" title="Edit"><i class="bi bi-pencil"></i></button>
+              <% if (!isExpired && k.status === 'enabled') { %>
+                <form action="/apikeys/<%= k.id %>/disable" method="POST" class="d-inline">
+                  <button class="btn btn-outline-warning" title="Disable"><i class="bi bi-pause-fill"></i></button>
+                </form>
+              <% } else { %>
+                <form action="/apikeys/<%= k.id %>/enable" method="POST" class="d-inline">
+                  <button class="btn btn-outline-success" title="Enable" <%= isExpired ? 'disabled' : '' %>><i class="bi bi-play-fill"></i></button>
+                </form>
+              <% } %>
+              <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#extendModal<%= k.id %>" title="Extend Expiry"><i class="bi bi-calendar-plus"></i></button>
+              <form action="/apikeys/<%= k.id %>/reset" method="POST" class="d-inline" onsubmit="return confirm('Reset usage counters for this key?');">
+                <button class="btn btn-outline-secondary" title="Reset Usage"><i class="bi bi-arrow-counterclockwise"></i></button>
+              </form>
+              <form action="/apikeys/<%= k.id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Delete this API key permanently?');">
+                <button class="btn btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal<%= k.id %>" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form action="/apikeys/<%= k.id %>/update" method="POST">
+                <div class="modal-header"><h6 class="modal-title">Edit Key — <%= k.owner_name %></h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                  <div class="mb-2"><label class="form-label">Owner Name</label>
+                    <input class="form-control" name="ownerName" value="<%= k.owner_name %>" required></div>
+                  <div class="mb-2"><label class="form-label">Daily Limit</label>
+                    <input class="form-control" type="number" name="dailyLimit" value="<%= k.daily_limit %>" required></div>
+                  <div class="mb-2"><label class="form-label">Total Limit</label>
+                    <input class="form-control" type="number" name="totalLimit" value="<%= k.total_limit %>" required></div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <button class="btn btn-primary" type="submit">Save Changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extend Expiry Modal -->
+        <div class="modal fade" id="extendModal<%= k.id %>" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form action="/apikeys/<%= k.id %>/extend" method="POST">
+                <div class="modal-header"><h6 class="modal-title">Extend Expiry — <%= k.owner_name %></h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                  <label class="form-label">Additional Days</label>
+                  <input class="form-control" type="number" name="extraDays" min="1" value="30" required>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                  <button class="btn btn-primary" type="submit">Extend</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+        <% if (keys.length === 0) { %>
+          <tr><td colspan="11" class="text-center text-muted py-4">No API keys yet. Generate your first one above.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create Key Modal -->
+<div class="modal fade" id="createKeyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/apikeys" method="POST">
+        <div class="modal-header"><h6 class="modal-title">Generate New API Key</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Owner Name</label>
+            <input class="form-control" name="ownerName" placeholder="e.g. John's App" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Custom API Key <span class="text-muted">(optional — leave blank to auto-generate)</span></label>
+            <input class="form-control" name="customKey" placeholder="vik_live_xxxxxxxx">
+          </div>
+          <div class="row">
+            <div class="col-6 mb-2">
+              <label class="form-label">Expiry (days)</label>
+              <input class="form-control" type="number" name="expiryDays" value="30" min="1" required>
+            </div>
+            <div class="col-6 mb-2">
+              <label class="form-label">Daily Limit</label>
+              <input class="form-control" type="number" name="dailyLimit" value="<%= defaults.dailyLimit %>" min="1" required>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Total Request Limit</label>
+            <input class="form-control" type="number" name="totalLimit" value="<%= defaults.totalLimit %>" min="1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit"><i class="bi bi-key-fill"></i> Generate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="/js/apikeys.js"></script>

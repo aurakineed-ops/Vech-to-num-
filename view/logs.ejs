@@ -1,0 +1,102 @@
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h5 class="mb-0">Request Logs</h5>
+  <div class="d-flex gap-2">
+    <a href="/logs/export?q=<%= filters.q %>" class="btn btn-outline-success btn-sm"><i class="bi bi-download"></i> Export CSV</a>
+    <form action="/logs/clear" method="POST" onsubmit="return confirm('This will permanently delete ALL logs. Continue?');">
+      <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Clear All</button>
+    </form>
+  </div>
+</div>
+
+<div class="panel mb-3">
+  <form class="row g-2" method="GET" action="/logs">
+    <div class="col-md-3">
+      <input class="form-control form-control-sm" name="q" placeholder="Search vehicle / owner / IP" value="<%= filters.q %>">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select form-select-sm" name="apiKey">
+        <option value="">All API Keys</option>
+        <% allKeys.forEach(function(k){ %>
+          <option value="<%= k.key %>" <%= filters.apiKey === k.key ? 'selected' : '' %>><%= k.owner_name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select form-select-sm" name="status">
+        <option value="">Any Status</option>
+        <option value="200" <%= filters.status === '200' ? 'selected' : '' %>>200 OK</option>
+        <option value="401" <%= filters.status === '401' ? 'selected' : '' %>>401 Unauthorized</option>
+        <option value="403" <%= filters.status === '403' ? 'selected' : '' %>>403 Forbidden</option>
+        <option value="429" <%= filters.status === '429' ? 'selected' : '' %>>429 Limit Reached</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input class="form-control form-control-sm" type="date" name="from" value="<%= filters.from %>">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary btn-sm w-100"><i class="bi bi-search"></i> Filter</button>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <form action="/logs/bulk-delete" method="POST">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle table-sm">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="checkAll"></th>
+            <th>Owner</th>
+            <th>Vehicle No.</th>
+            <th>IP</th>
+            <th>Country</th>
+            <th>Status</th>
+            <th>Time (ms)</th>
+            <th>Timestamp</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.forEach(function(l){ %>
+            <tr>
+              <td><input type="checkbox" name="ids" value="<%= l.id %>"></td>
+              <td><%= l.owner %></td>
+              <td><code><%= l.vehicle_number %></code></td>
+              <td class="small"><%= l.ip_address %></td>
+              <td class="small"><%= l.country %></td>
+              <td><span class="badge <%= l.response_status < 300 ? 'bg-success' : 'bg-danger' %>"><%= l.response_status %></span></td>
+              <td class="small"><%= l.response_time %></td>
+              <td class="small text-muted"><%= new Date(l.timestamp).toLocaleString() %></td>
+              <td>
+                <form action="/logs/<%= l.id %>/delete" method="POST" onsubmit="return confirm('Delete this log?');">
+                  <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+          <% if (logs.length === 0) { %>
+            <tr><td colspan="9" class="text-center text-muted py-4">No logs match your filters.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete selected logs?');"><i class="bi bi-trash"></i> Delete Selected</button>
+      <nav>
+        <ul class="pagination pagination-sm mb-0">
+          <% for (let p = 1; p <= pagination.pages; p++) { %>
+            <li class="page-item <%= p === pagination.page ? 'active' : '' %>">
+              <a class="page-link" href="/logs?page=<%= p %>&q=<%= filters.q %>&apiKey=<%= filters.apiKey %>&status=<%= filters.status %>"><%= p %></a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('checkAll')?.addEventListener('change', function(e){
+    document.querySelectorAll('input[name="ids"]').forEach(cb => cb.checked = e.target.checked);
+  });
+</script>

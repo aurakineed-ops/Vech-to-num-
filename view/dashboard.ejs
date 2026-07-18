@@ -1,0 +1,87 @@
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon bg-primary"><i class="bi bi-graph-up"></i></div>
+    <div><div class="stat-value" id="statTotalRequests"><%= stats.totalRequests %></div><div class="stat-label">Total Requests</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-info"><i class="bi bi-calendar-day"></i></div>
+    <div><div class="stat-value" id="statTodayRequests"><%= stats.todayRequests %></div><div class="stat-label">Today's Requests</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-purple"><i class="bi bi-calendar-month"></i></div>
+    <div><div class="stat-value" id="statMonthRequests"><%= stats.monthRequests %></div><div class="stat-label">This Month</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-dark"><i class="bi bi-key-fill"></i></div>
+    <div><div class="stat-value"><%= stats.totalApiKeys %></div><div class="stat-label">Total API Keys</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-success"><i class="bi bi-check-circle-fill"></i></div>
+    <div><div class="stat-value"><%= stats.activeApiKeys %></div><div class="stat-label">Active Keys</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-warning"><i class="bi bi-hourglass-split"></i></div>
+    <div><div class="stat-value"><%= stats.expiredApiKeys %></div><div class="stat-label">Expired Keys</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-secondary"><i class="bi bi-slash-circle-fill"></i></div>
+    <div><div class="stat-value"><%= stats.disabledApiKeys %></div><div class="stat-label">Disabled Keys</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-teal"><i class="bi bi-people-fill"></i></div>
+    <div><div class="stat-value"><%= stats.totalUsers %></div><div class="stat-label">Total Admin Users</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-success"><i class="bi bi-hdd-network-fill"></i></div>
+    <div><div class="stat-value" style="font-size:1.1rem"><%= stats.serverStatus %></div><div class="stat-label">Server Status</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon bg-success"><i class="bi bi-cloud-check-fill"></i></div>
+    <div><div class="stat-value" style="font-size:1.1rem"><%= stats.apiStatus %></div><div class="stat-label">API Status</div></div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-8">
+    <div class="panel">
+      <h6 class="panel-title">Daily Requests (Last 14 Days)</h6>
+      <canvas id="dailyChart" height="90"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel">
+      <h6 class="panel-title">Request Success vs Failed</h6>
+      <canvas id="successChart" height="90"></canvas>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="panel">
+      <h6 class="panel-title">Monthly Requests</h6>
+      <canvas id="monthlyChart" height="100"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-3">
+    <div class="panel">
+      <h6 class="panel-title">Active vs Expired vs Disabled</h6>
+      <canvas id="keyStatusChart" height="100"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-3">
+    <div class="panel">
+      <h6 class="panel-title">Top Used API Keys</h6>
+      <canvas id="topKeysChart" height="100"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.__DASHBOARD_DATA__ = {
+    daily: <%- daily %>,
+    monthly: <%- monthly %>,
+    topKeys: <%- topKeys %>,
+    activeVsExpired: <%- activeVsExpired %>,
+    successVsFailed: <%- successVsFailed %>
+  };
+</script>
+<script src="/js/dashboard.js"></script>

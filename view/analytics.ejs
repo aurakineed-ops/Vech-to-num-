@@ -1,0 +1,81 @@
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="panel">
+      <h6 class="panel-title">Requests Per Day (30 Days)</h6>
+      <canvas id="analyticsDailyChart" height="90"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel">
+      <h6 class="panel-title">Requests Per Month (12 Months)</h6>
+      <canvas id="analyticsMonthlyChart" height="90"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="panel">
+      <h6 class="panel-title">Top API Keys</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Owner</th><th class="text-end">Requests</th></tr></thead>
+        <tbody>
+          <% topKeys.forEach(function(k){ %>
+            <tr><td><%= k.owner_name %></td><td class="text-end"><%= k.request_count %></td></tr>
+          <% }) %>
+          <% if (!topKeys.length) { %><tr><td colspan="2" class="text-muted text-center">No data</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="panel">
+      <h6 class="panel-title">Top Users</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Owner</th><th class="text-end">Requests</th></tr></thead>
+        <tbody>
+          <% topOwners.forEach(function(o){ %>
+            <tr><td><%= o.owner %></td><td class="text-end"><%= o.count %></td></tr>
+          <% }) %>
+          <% if (!topOwners.length) { %><tr><td colspan="2" class="text-muted text-center">No data</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="panel">
+      <h6 class="panel-title">Most Searched Vehicle Numbers</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Vehicle No.</th><th class="text-end">Searches</th></tr></thead>
+        <tbody>
+          <% topVehicles.forEach(function(v){ %>
+            <tr><td><code><%= v.vehicle_number %></code></td><td class="text-end"><%= v.count %></td></tr>
+          <% }) %>
+          <% if (!topVehicles.length) { %><tr><td colspan="2" class="text-muted text-center">No data</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-md-6">
+    <div class="panel text-center">
+      <h6 class="panel-title">Average Response Time</h6>
+      <div class="display-6"><%= avgResponseTime %> ms</div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel text-center">
+      <h6 class="panel-title">Total Requests Logged</h6>
+      <div class="display-6"><%= totalRequests %></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.__ANALYTICS_DATA__ = { daily: <%- daily %>, monthly: <%- monthly %> };
+</script>
+<script src="/js/analytics.js"></script>

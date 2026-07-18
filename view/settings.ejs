@@ -1,0 +1,99 @@
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="panel">
+      <h6 class="panel-title">Website Settings</h6>
+      <form action="/settings" method="POST">
+        <div class="mb-2">
+          <label class="form-label">Website Name</label>
+          <input class="form-control" name="websiteName" value="<%= settings.website_name %>">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Logo URL</label>
+          <input class="form-control" name="logo" value="<%= settings.logo %>">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Theme</label>
+          <select class="form-select" name="theme">
+            <option value="light" <%= settings.theme === 'light' ? 'selected' : '' %>>Light</option>
+            <option value="dark" <%= settings.theme === 'dark' ? 'selected' : '' %>>Dark</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">API Base URL (upstream)</label>
+          <input class="form-control" name="apiBaseUrl" value="<%= settings.api_base_url %>">
+        </div>
+        <div class="row">
+          <div class="col-6 mb-2">
+            <label class="form-label">Default Daily Limit</label>
+            <input class="form-control" type="number" name="defaultDailyLimit" value="<%= settings.default_daily_limit %>">
+          </div>
+          <div class="col-6 mb-2">
+            <label class="form-label">Default Total Limit</label>
+            <input class="form-control" type="number" name="defaultTotalLimit" value="<%= settings.default_total_limit %>">
+          </div>
+        </div>
+        <div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" name="maintenanceMode" id="maintenanceMode" <%= settings.maintenance_mode ? 'checked' : '' %>>
+          <label class="form-check-label" for="maintenanceMode">Maintenance Mode (blocks public API)</label>
+        </div>
+        <button class="btn btn-primary"><i class="bi bi-save"></i> Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="panel mb-3">
+      <h6 class="panel-title">Change Password</h6>
+      <form action="/settings/change-password" method="POST">
+        <div class="mb-2">
+          <label class="form-label">Current Password</label>
+          <input class="form-control" type="password" name="currentPassword" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">New Password</label>
+          <input class="form-control" type="password" name="newPassword" required minlength="6">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Confirm New Password</label>
+          <input class="form-control" type="password" name="confirmPassword" required minlength="6">
+        </div>
+        <button class="btn btn-outline-primary"><i class="bi bi-key"></i> Update Password</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h6 class="panel-title">Admin Accounts</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Username</th><th>Role</th><th>Last Login</th><th></th></tr></thead>
+        <tbody>
+          <% admins.forEach(function(a){ %>
+            <tr>
+              <td><%= a.username %></td>
+              <td><span class="badge text-bg-secondary"><%= a.role %></span></td>
+              <td class="small text-muted"><%= a.last_login ? new Date(a.last_login).toLocaleString() : 'Never' %></td>
+              <td>
+                <form action="/settings/admins/<%= a.id %>/delete" method="POST" onsubmit="return confirm('Delete this admin account?');">
+                  <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <hr>
+      <h6 class="fw-semibold">Create New Admin</h6>
+      <form action="/settings/admins" method="POST" class="row g-2">
+        <div class="col-md-4"><input class="form-control form-control-sm" name="username" placeholder="Username" required></div>
+        <div class="col-md-4"><input class="form-control form-control-sm" type="password" name="password" placeholder="Password" required></div>
+        <div class="col-md-3">
+          <select class="form-select form-select-sm" name="role">
+            <option value="admin">Admin</option>
+            <option value="superadmin">Super Admin</option>
+          </select>
+        </div>
+        <div class="col-md-1"><button class="btn btn-sm btn-primary w-100"><i class="bi bi-plus"></i></button></div>
+      </form>
+    </div>
+  </div>
+</div>
